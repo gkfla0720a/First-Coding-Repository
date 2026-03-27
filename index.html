@@ -3,43 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="스타크래프트 빠른무한 바이클랜 공식 홈페이지입니다. 레더 매치, 랭킹, 이벤트 등의 정보를 확인하세요.">
+  
+  <meta property="og:title" content="ByClan - 스타크래프트 빠른무한 공식 길드">
+  <meta property="og:description" content="레더 매치, 랭킹, 이벤트 등 바이클랜의 모든 소식을 확인하세요.">
+  
   <title>ByClan Main Prototype</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-  
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
+
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
   <style>
-    /* 부드러운 폰트 적용 */
     body { font-family: 'Pretendard', sans-serif; }
   </style>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-gray-900 text-gray-100">
+
+<body class="bg-gray-900 text-gray-200 font-semibold">
+  
   <div id="root"></div>
 
   <script type="text/babel">
+    
+    // === 2. 업그레이드된 하이테크 네온 금속 로고 (Upgraded Neon Metal Logo) ===
+    // 기존 로고의 금색 금속 느낌을 살리고 주위에 네온을 둘렀습니다.
+    function ByClanLogo() {
+      return (
+        <div className="w-12 h-12 flex items-center justify-center relative shadow-lg shadow-sky-500/20">
+          
+          {/* [수정] 1. 기존 로고의 금색 금속 육각형 필드 (Gold Metallic Field)
+               검은 배경 대신, 실제 금속 광택 느낌의 그라데이션을 적용했습니다.
+          */}
+          <div 
+            className="absolute inset-0 mask-hexagon shadow-inner border border-amber-500/50"
+            style={{
+              background: 'linear-gradient(135deg, #b89c42 0%, #f7e6a1 50%, #d4b85c 100%)', // 금속 질감 그라데이션
+            }}
+          ></div>
+          
+          {/* 2. 에너제틱 블루 네온 라인 (Neon Blue Outline)
+               금색 프레임 주위를 감싸는 네온 효과는 유지합니다.
+          */}
+          <div className="absolute inset-0 border border-sky-400 rounded-lg mask-hexagon shadow-[0_0_15px_3px_rgba(56,189,248,0.5)] z-10"></div>
+
+          {/* [수정] 3. 기존 로고 스타일의 묵직한 'BY' 이니셜 (Bold BY Initials)
+               기본 폰트 대신 굵고 진한 남색 계열로 변경하여 기존 로고의 느낌을 복구했습니다.
+          */}
+          <span className="font-extrabold text-2xl text-blue-950 z-20 tracking-tighter relative" style={{ top: '-1px' }}>
+            BY
+          </span>
+          
+        </div>
+      );
+    }
+
+    // === 2. 메인 홈페이지 컴포넌트 (Main Home Component) ===
     function ByClanHome() {
-      // 1. 상태 관리 및 참조 (State and Refs)
-      const [openSubMenu, setOpenSubMenu] = React.useState(null);
+      // 상태 관리 및 참조 (Hover state)
+      const [hoveredMenuIndex, setHoveredMenuIndex] = React.useState(null);
       const navRef = React.useRef(null);
+      const menuRefs = React.useRef([]); 
 
-      // 2. 외부 클릭 시 메뉴 닫기 (Close menu on outside click)
-      React.useEffect(() => {
-        function handleClickOutside(event) {
-          if (navRef.current && !navRef.current.contains(event.target)) {
-            setOpenSubMenu(null);
-          }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-          document.removeEventListener("mousedown", handleClickOutside);
-        };
-      }, []);
-
-      // 3. 메뉴 데이터 (Menu Data)
+      // 데이터 (Menu Data)
       const menuData = [
         { title: '클랜소개', items: ['개요', '목표', '활동 내용', '클랜원', '가입방법'] },
         { title: '랭킹보드', items: ['시즌별 랭킹', '클랜원별 랭킹', '시즌별 우승자'] },
@@ -50,43 +78,62 @@
         { title: '이벤트', items: ['다가오는 이벤트', '지난 이벤트', '이벤트 참여 방법', '이벤트 결과'] }
       ];
 
-      const toggleSubMenu = (index) => {
-        setOpenSubMenu(openSubMenu === index ? null : index);
+      // 스크롤 넘어감 방지를 위한 JS 기반 위치 계산 함수
+      const getDropdownPlacement = (index) => {
+        const menuItem = menuRefs.current[index];
+        const dropdownWidth = 160; 
+        const viewportWidth = window.innerWidth;
+
+        if (!menuItem) return 'left-0';
+        const menuItemLeft = menuItem.getBoundingClientRect().left; 
+
+        if (menuItemLeft + dropdownWidth > viewportWidth) {
+          return 'right-0';
+        }
+        return 'left-0';
       };
 
       return (
         <div className="min-h-screen">
           
-          {/* === 네비게이션 영역 === */}
+          {/* 네비게이션 영역 */}
           <nav ref={navRef} className="bg-gray-800 border-b border-gray-700 relative z-50">
-            <div className="max-w-6xl mx-auto px-4 py-4 flex items-center">
+            <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
               
-              {/* 로고 (Logo) */}
-              <h1 className="text-2xl font-bold text-white tracking-wider cursor-pointer mr-8 shrink-0">
-                ByClan
-              </h1>
+              {/* 로고 및 클랜명 영역 (With New Logo) */}
+              <div className="flex items-center gap-3 cursor-pointer">
+                <ByClanLogo />
+                <h1 className="text-2xl font-bold text-white tracking-wider shrink-0">
+                  ByClan
+                </h1>
+              </div>
               
-              {/* 상위 메뉴: 가로 스크롤 제거, flex-wrap으로 자연스러운 줄바꿈 허용 (Main menu: removed horizontal scroll, added flex-wrap) */}
-              <ul className="flex flex-wrap gap-x-6 gap-y-3 w-full items-center">
+              {/* 상위 메뉴 (Main menu) - Now uses hover instead of click */}
+              <ul className="flex flex-wrap gap-x-6 gap-y-3 items-center justify-end">
                 {menuData.map((menu, index) => (
-                  <li key={index} className="relative">
+                  <li key={index} 
+                      className="relative" 
+                      ref={(el) => menuRefs.current[index] = el}
+                      // 마우스 오버 시 메뉴 펼침 (Expand on hover)
+                      onMouseEnter={() => setHoveredMenuIndex(index)}
+                      // 마우스가 나가면 메뉴 닫힘 (Close on mouse out)
+                      onMouseLeave={() => setHoveredMenuIndex(null)}
+                  >
                     
-                    {/* 상위 메뉴 항목 (Main menu item) */}
+                    {/* 메뉴 버튼 */}
                     <button 
-                      onClick={() => toggleSubMenu(index)}
-                      className={`flex items-center gap-1 transition-colors duration-200 hover:scale-105 ${openSubMenu === index ? 'text-white font-bold' : 'text-gray-300 hover:text-blue-400'}`}
+                      className="text-gray-300 hover:text-white transition-colors duration-200 hover:scale-105"
                     >
                       {menu.title}
-                      <span className="text-xs ml-1">{openSubMenu === index ? '▲' : '▼'}</span>
                     </button>
 
-                    {/* 하위 메뉴: 스크롤 감옥에서 탈출하여 컨텐츠 위에 완벽하게 뜸 (Sub-menu: escaped the scroll prison, floats perfectly over content) */}
-                    {openSubMenu === index && (
-                      <div className="absolute top-full left-0 mt-3 w-40 bg-gray-800 border border-gray-600 rounded-lg shadow-2xl flex flex-col z-50 overflow-hidden">
+                    {/* 하위 메뉴 (글래스모피즘 적용, 투명도 증가) */}
+                    {hoveredMenuIndex === index && (
+                      <div className={`absolute top-full mt-3 w-40 bg-gray-800/60 backdrop-blur-lg border border-sky-500/40 rounded-lg shadow-2xl flex flex-col z-50 overflow-hidden ${getDropdownPlacement(index)} animate-fade-in-down`}>
                         {menu.items.map((subItem, subIndex) => (
                           <span 
                             key={subIndex} 
-                            className="px-4 py-3 text-sm text-gray-300 hover:bg-gray-600 hover:text-white cursor-pointer transition-colors border-b border-gray-700 last:border-none"
+                            className="px-4 py-3 text-sm text-gray-100 hover:bg-sky-600/30 hover:text-white cursor-pointer transition-colors border-b border-gray-600/50 last:border-none"
                           >
                             {subItem}
                           </span>
@@ -99,12 +146,12 @@
             </div>
           </nav>
 
-          {/* === 메인 화면 자동 재생 비디오 영역 === */}
+          {/* 메인 화면 자동 재생 비디오 영역 */}
           <header className="h-64 bg-black flex items-center justify-center border-b border-gray-700 relative z-10">
             <p className="text-gray-500">[자동 재생 영상 또는 클랜 대표 이미지 영역]</p>
           </header>
 
-          {/* === 콘텐츠 영역 === */}
+          {/* 콘텐츠 영역 */}
           <main className="max-w-6xl mx-auto px-4 py-8 space-y-12 relative z-10">
             
             {/* Top 10 랭킹 보드 */}
@@ -152,7 +199,7 @@
       );
     }
 
-    // 작성한 리액트 컴포넌트를 id가 root인 div 태그 안에 밀어 넣습니다.
+    // 작성한 React 컴포넌트를 실제 화면(#root)에 렌더링
     ReactDOM.render(<ByClanHome />, document.getElementById('root'));
   </script>
 </body>
