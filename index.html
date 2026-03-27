@@ -30,31 +30,20 @@
     
     // === 2. 업그레이드된 하이테크 네온 금속 로고 (Upgraded Neon Metal Logo) ===
     // 기존 로고의 금색 금속 느낌을 살리고 주위에 네온을 둘렀습니다.
+    // === 업그레이드된 이미지 기반 로고 컴포넌트 (Image-based Logo Component) ===
     function ByClanLogo() {
       return (
-        <div className="w-12 h-12 flex items-center justify-center relative shadow-lg shadow-sky-500/20">
+        <div className="flex items-center justify-center relative cursor-pointer group">
           
-          {/* [수정] 1. 기존 로고의 금색 금속 육각형 필드 (Gold Metallic Field)
-               검은 배경 대신, 실제 금속 광택 느낌의 그라데이션을 적용했습니다.
+          {/* src="./logo.png" : 같은 폴더에 있는 logo.png 파일을 불러옵니다.
+            drop-shadow : 투명한 이미지의 '형태'를 따라 그림자(네온 빛)를 만듭니다.
+            group-hover : 마우스를 올리면 네온 빛이 더 밝아집니다!
           */}
-          <div 
-            className="absolute inset-0 mask-hexagon shadow-inner border border-amber-500/50"
-            style={{
-              background: 'linear-gradient(135deg, #b89c42 0%, #f7e6a1 50%, #d4b85c 100%)', // 금속 질감 그라데이션
-            }}
-          ></div>
-          
-          {/* 2. 에너제틱 블루 네온 라인 (Neon Blue Outline)
-               금색 프레임 주위를 감싸는 네온 효과는 유지합니다.
-          */}
-          <div className="absolute inset-0 border border-sky-400 rounded-lg mask-hexagon shadow-[0_0_15px_3px_rgba(56,189,248,0.5)] z-10"></div>
-
-          {/* [수정] 3. 기존 로고 스타일의 묵직한 'BY' 이니셜 (Bold BY Initials)
-               기본 폰트 대신 굵고 진한 남색 계열로 변경하여 기존 로고의 느낌을 복구했습니다.
-          */}
-          <span className="font-extrabold text-2xl text-blue-950 z-20 tracking-tighter relative" style={{ top: '-1px' }}>
-            BY
-          </span>
+          <img 
+            src="./logo.png" 
+            alt="ByClan Logo" 
+            className="w-12 h-12 object-contain transition-all duration-300 drop-shadow-[0_0_8px_rgba(56,189,248,0.6)] group-hover:drop-shadow-[0_0_15px_rgba(56,189,248,1)]"
+          />
           
         </div>
       );
