@@ -22,49 +22,95 @@
 
   <script type="text/babel">
     function ByClanHome() {
-      // 메뉴가 열려있는지 닫혀있는지 기억하는 상태 값 (기본값: false)  
-      const [isNavOpen, setIsNavOpen] = React.useState(false);
+      // 1. 상태 관리 및 참조 (State and Refs)
+      const [openSubMenu, setOpenSubMenu] = React.useState(null);
+      const navRef = React.useRef(null);
+
+      // 2. 외부 클릭 시 메뉴 닫기 (Close menu on outside click)
+      React.useEffect(() => {
+        function handleClickOutside(event) {
+          if (navRef.current && !navRef.current.contains(event.target)) {
+            setOpenSubMenu(null);
+          }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, []);
+
+      // 3. 메뉴 데이터 (Menu Data)
+      const menuData = [
+        { title: '클랜소개', items: ['개요', '목표', '활동 내용', '클랜원', '가입방법'] },
+        { title: '랭킹보드', items: ['시즌별 랭킹', '클랜원별 랭킹', '시즌별 우승자'] },
+        { title: 'BY레더시스템', items: ['레더 매치', '레더 포인트', '레더 보상 안내'] },
+        { title: '클랜대회', items: ['BSL 일정', '토너먼트 일정', '대회 규칙', '대회 결과', '대회 영상'] },
+        { title: '커뮤니티', items: ['공지사항', '자유게시판', '클랜원 소식', '이벤트 게시판'] },
+        { title: '미디어', items: ['경기 영상', '클랜 활동 영상', '사진 갤러리', '클랜 홍보 영상'] },
+        { title: '이벤트', items: ['다가오는 이벤트', '지난 이벤트', '이벤트 참여 방법', '이벤트 결과'] }
+      ];
+
+      const toggleSubMenu = (index) => {
+        setOpenSubMenu(openSubMenu === index ? null : index);
+      };
 
       return (
         <div className="min-h-screen">
           
-          {/* 1. 네비게이션 바 (확장 메뉴 애니메이션) */}
-          <nav className="bg-gray-800 border-b border-gray-700">
-            <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-white tracking-wider">ByClan</h1>
-              <button 
-                onClick={() => setIsNavOpen(!isNavOpen)} 
-                className="focus:outline-none text-gray-300 hover:text-white"
-              >
-                메뉴 {isNavOpen ? '▲' : '▼'}
-              </button>
+          {/* === 네비게이션 영역 === */}
+          <nav ref={navRef} className="bg-gray-800 border-b border-gray-700 relative z-50">
+            <div className="max-w-6xl mx-auto px-4 py-4 flex items-center">
+              
+              {/* 로고 (Logo) */}
+              <h1 className="text-2xl font-bold text-white tracking-wider cursor-pointer mr-8 shrink-0">
+                ByClan
+              </h1>
+              
+              {/* 상위 메뉴: 가로 스크롤 제거, flex-wrap으로 자연스러운 줄바꿈 허용 (Main menu: removed horizontal scroll, added flex-wrap) */}
+              <ul className="flex flex-wrap gap-x-6 gap-y-3 w-full items-center">
+                {menuData.map((menu, index) => (
+                  <li key={index} className="relative">
+                    
+                    {/* 상위 메뉴 항목 (Main menu item) */}
+                    <button 
+                      onClick={() => toggleSubMenu(index)}
+                      className={`flex items-center gap-1 transition-colors duration-200 hover:scale-105 ${openSubMenu === index ? 'text-white font-bold' : 'text-gray-300 hover:text-blue-400'}`}
+                    >
+                      {menu.title}
+                      <span className="text-xs ml-1">{openSubMenu === index ? '▲' : '▼'}</span>
+                    </button>
+
+                    {/* 하위 메뉴: 스크롤 감옥에서 탈출하여 컨텐츠 위에 완벽하게 뜸 (Sub-menu: escaped the scroll prison, floats perfectly over content) */}
+                    {openSubMenu === index && (
+                      <div className="absolute top-full left-0 mt-3 w-40 bg-gray-800 border border-gray-600 rounded-lg shadow-2xl flex flex-col z-50 overflow-hidden">
+                        {menu.items.map((subItem, subIndex) => (
+                          <span 
+                            key={subIndex} 
+                            className="px-4 py-3 text-sm text-gray-300 hover:bg-gray-600 hover:text-white cursor-pointer transition-colors border-b border-gray-700 last:border-none"
+                          >
+                            {subItem}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
-            
-            {/* 메뉴 버튼을 눌렀을 때만 아래 내용이 보입니다 */}
-            {isNavOpen && (
-              <div className="bg-gray-700 px-4 py-4 transition-all duration-300 ease-in-out">
-                <ul className="space-y-4 text-center font-medium">
-                  <li className="hover:text-blue-400 cursor-pointer">클랜 소개</li>
-                  <li className="hover:text-blue-400 cursor-pointer">랭킹 보드</li>
-                  <li className="hover:text-blue-400 cursor-pointer">이전 시즌 우승자</li>
-                  <li className="hover:text-blue-400 cursor-pointer">다가오는 이벤트</li>
-                </ul>
-              </div>
-            )}
           </nav>
 
-          {/* 2. 메인 화면 자동 재생 비디오 영역 */}
-          <header className="h-64 bg-black flex items-center justify-center border-b border-gray-700">
+          {/* === 메인 화면 자동 재생 비디오 영역 === */}
+          <header className="h-64 bg-black flex items-center justify-center border-b border-gray-700 relative z-10">
             <p className="text-gray-500">[자동 재생 영상 또는 클랜 대표 이미지 영역]</p>
           </header>
 
-          <main className="max-w-6xl mx-auto px-4 py-8 space-y-12">
+          {/* === 콘텐츠 영역 === */}
+          <main className="max-w-6xl mx-auto px-4 py-8 space-y-12 relative z-10">
             
-            {/* 3. Top 10 랭킹 보드 (가로 스크롤 제거, 그리드 분리형) */}
+            {/* Top 10 랭킹 보드 */}
             <section>
               <h2 className="text-xl font-bold mb-4 text-white">🏆 Top 10 랭킹 보드</h2>
               
-              {/* 상위 1~4위 (큰 그리드) */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[1, 2, 3, 4].map(rank => (
                   <div key={rank} className="bg-blue-900/80 h-32 rounded-lg flex flex-col items-center justify-center shadow-lg border border-blue-700">
@@ -74,7 +120,6 @@
                 ))}
               </div>
               
-              {/* 중위 5~10위 (작은 그리드) */}
               <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mt-4">
                 {[5, 6, 7, 8, 9, 10].map(rank => (
                   <div key={rank} className="bg-gray-800 h-20 rounded-lg flex flex-col items-center justify-center border border-gray-700">
@@ -85,7 +130,7 @@
               </div>
             </section>
 
-            {/* 4. 이전 시즌 우승자 & 다가오는 이벤트 */}
+            {/* 이전 시즌 우승자 & 다가오는 이벤트 */}
             <div className="grid md:grid-cols-2 gap-8">
               <section className="bg-gray-800 p-6 rounded-lg border border-gray-700">
                 <h2 className="text-xl font-bold mb-4 text-white">🏅 이전 시즌 우승자</h2>
