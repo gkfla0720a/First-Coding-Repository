@@ -2,7 +2,8 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+
   <meta name="description" content="스타크래프트 빠른무한 바이클랜 공식 홈페이지입니다. 레더 매치, 랭킹, 이벤트 등의 정보를 확인하세요.">
   
   <meta property="og:title" content="ByClan - 스타크래프트 빠른무한 공식 길드">
@@ -62,52 +63,110 @@
     }
 
     // === 3. 메인 홈 콘텐츠 컴포넌트 (Main Home Content) ===
+        // === 3. 메인 홈 콘텐츠 컴포넌트 (프리미엄 대시보드 업그레이드) ===
     function HomeContent() {
+      // 대시보드용 임시 미리보기 데이터 (Top 3 및 최근 공지)
+      const topRankers = [
+        { rank: 1, name: 'By_Slayer', points: 2150 },
+        { rank: 2, name: 'By_Flash', points: 2080 },
+        { rank: 3, name: 'By_Zergling', points: 1950 },
+      ];
+      
+      const recentNotices = [
+        { id: 1, type: '필독', title: '바이클랜 2026년 상반기 통합 랭킹전 안내', date: '03.28' },
+        { id: 2, type: '공지', title: '신규 클랜원 가입 조건 및 테스트 안내', date: '03.25' },
+        { id: 3, type: '이벤트', title: '주말 빠른무한 내전 참여자 포인트 2배', date: '03.21' },
+      ];
+
       return (
-        <div className="space-y-12 animate-fade-in-down w-full max-w-6xl mx-auto">
-          {/* Top 10 랭킹 보드 */}
-          <section>
-            <h2 className="text-xl font-bold mb-4 text-white">🏆 Top 10 랭킹 보드</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map(rank => (
-                <div key={rank} className="bg-blue-900/80 h-32 rounded-lg flex flex-col items-center justify-center shadow-lg border border-blue-700 transition-transform hover:scale-105 cursor-pointer">
-                  <span className="font-bold text-2xl text-yellow-400">{rank}위</span>
-                  <span className="text-sm mt-1 text-gray-200">클랜원 이름</span>
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mt-4">
-              {[5, 6, 7, 8, 9, 10].map(rank => (
-                <div key={rank} className="bg-gray-800 h-20 rounded-lg flex flex-col items-center justify-center border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
-                  <span className="font-semibold text-gray-300">{rank}위</span>
-                  <span className="text-xs text-gray-400 mt-1">클랜원</span>
-                </div>
-              ))}
-            </div>
+        <div className="w-full max-w-5xl mx-auto space-y-6 sm:space-y-8 animate-fade-in-down mt-4 sm:mt-8">
+          
+          {/* 1. 메인 히어로 배너 (Hero Section) */}
+          <section className="relative bg-gray-900 rounded-2xl overflow-hidden border border-gray-700 shadow-2xl h-64 sm:h-80 flex flex-col items-center justify-center text-center group">
+             {/* 배경 이미지 (어두운 오버레이 포함) */}
+             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity duration-700"></div>
+             <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
+             
+             {/* 배너 텍스트 및 버튼 */}
+             <div className="relative z-10 px-4">
+               <span className="text-yellow-500 font-bold tracking-widest text-xs sm:text-sm mb-2 block">STARCRAFT FAST INFINITE CLAN</span>
+               <h2 className="text-3xl sm:text-5xl font-black text-white mb-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                 Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600">ByClan</span>
+               </h2>
+               <p className="text-gray-300 max-w-xl mx-auto text-xs sm:text-base mb-6 hidden sm:block">
+                 전통과 실력을 자랑하는 최고의 스타크래프트 빠른무한 길드.<br/>지금 바로 래더에 참여하고 당신의 실력을 증명하세요!
+               </p>
+               <button className="px-5 py-2 sm:px-6 sm:py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-gray-900 text-sm sm:text-base font-bold rounded-full shadow-[0_0_15px_rgba(234,179,8,0.4)] transition-all transform hover:scale-105">
+                 가입 신청하기
+               </button>
+             </div>
           </section>
 
-          {/* 이전 시즌 우승자 & 다가오는 이벤트 */}
-          <div className="grid md:grid-cols-2 gap-8">
-            <section className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-              <h2 className="text-xl font-bold mb-4 text-white">🏅 이전 시즌 우승자</h2>
-              <div className="h-24 flex items-center justify-center bg-gray-900 rounded border border-gray-700">
-                <p className="text-gray-400">시즌 1 우승자 정보</p>
+          {/* 2. 대시보드 하단 그리드 (랭킹 미리보기 & 공지사항 미리보기) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* 좌측: 명예의 전당 (Top 3) */}
+            <section className="bg-gray-800 p-5 sm:p-6 rounded-xl border border-gray-700 shadow-xl flex flex-col hover:border-gray-600 transition-colors">
+              <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+                <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                  <span>🏆</span> 명예의 전당
+                </h3>
+                <button className="text-xs text-sky-400 hover:text-sky-300 transition-colors">자세히 보기 &gt;</button>
+              </div>
+              <div className="flex-grow flex flex-col justify-center space-y-3">
+                {topRankers.map((player) => (
+                  <div key={player.rank} className="flex items-center justify-between bg-gray-900/50 p-3 rounded-lg border border-gray-700/50 hover:border-yellow-500/30 transition-colors cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <span className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full font-bold text-xs sm:text-sm shadow-inner
+                        ${player.rank === 1 ? 'bg-yellow-500 text-gray-900' : 
+                          player.rank === 2 ? 'bg-gray-400 text-gray-900' : 
+                          'bg-amber-700 text-white'}`}>
+                        {player.rank}
+                      </span>
+                      <span className="font-semibold text-gray-200 text-sm sm:text-base">{player.name}</span>
+                    </div>
+                    <span className="font-bold text-sky-400 text-sm sm:text-base">{player.points} P</span>
+                  </div>
+                ))}
               </div>
             </section>
-            <section className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-              <h2 className="text-xl font-bold mb-4 text-white">📅 다가오는 이벤트</h2>
-              <div className="h-24 flex items-center justify-center bg-gray-900 rounded border border-gray-700">
-                <p className="text-gray-400">다음 내전 일정 안내</p>
+
+            {/* 우측: 최근 클랜 소식 */}
+            <section className="bg-gray-800 p-5 sm:p-6 rounded-xl border border-gray-700 shadow-xl flex flex-col hover:border-gray-600 transition-colors">
+              <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+                <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                  <span>📢</span> 최근 클랜 소식
+                </h3>
+                <button className="text-xs text-sky-400 hover:text-sky-300 transition-colors">더보기 &gt;</button>
+              </div>
+              <div className="flex-grow flex flex-col justify-center space-y-2 sm:space-y-3">
+                {recentNotices.map((notice) => (
+                  <div key={notice.id} className="flex items-center justify-between p-2 hover:bg-gray-700/50 rounded transition-colors cursor-pointer group">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold shrink-0
+                        ${notice.type === '필독' ? 'bg-red-900/60 text-red-400 border border-red-700/50' : 
+                          notice.type === '이벤트' ? 'bg-sky-900/60 text-sky-400 border border-sky-700/50' : 
+                          'bg-gray-700 text-gray-300 border border-gray-600/50'}`}>
+                        {notice.type}
+                      </span>
+                      <span className="text-sm text-gray-300 group-hover:text-yellow-400 transition-colors truncate">
+                        {notice.title}
+                      </span>
+                    </div>
+                    <span className="text-xs text-gray-500 shrink-0 ml-2">{notice.date}</span>
+                  </div>
+                ))}
               </div>
             </section>
+
           </div>
         </div>
       );
     }
 
-    // === 5. 공지사항 게시판 컴포넌트 (Notice Board Component) ===
+
+        // === 5. 공지사항 게시판 컴포넌트 (모바일 반응형 완벽 적용) ===
     function NoticeBoard() {
-      // 게시판 임시 데이터 (실제 클랜 상황에 맞게 수정 가능)
       const notices = [
         { id: 1, type: '필독', title: '바이클랜 2026년 상반기 통합 랭킹전 안내', author: '운영진', date: '2026.03.28', views: 142 },
         { id: 2, type: '공지', title: '신규 클랜원 가입 조건 및 테스트 안내', author: '길드마스터', date: '2026.03.25', views: 89 },
@@ -117,14 +176,14 @@
       ];
 
       return (
-        <div className="w-full max-w-5xl mx-auto animate-fade-in-down mt-8">
+        <div className="w-full max-w-5xl mx-auto animate-fade-in-down mt-4 sm:mt-8">
           
           {/* 게시판 헤더 영역 */}
-          <div className="flex justify-between items-end mb-6">
-            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500 drop-shadow-md">
+          <div className="flex justify-between items-end mb-4 sm:mb-6 px-2 sm:px-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500 drop-shadow-md">
               📢 공지사항
             </h2>
-            <button className="px-5 py-2 bg-sky-600 hover:bg-sky-500 text-white text-sm font-semibold rounded transition-colors shadow-lg">
+            <button className="px-4 py-1.5 sm:px-5 sm:py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-semibold rounded transition-colors shadow-lg">
               글쓰기
             </button>
           </div>
@@ -133,41 +192,320 @@
           <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-2xl">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gray-900/80 text-gray-400 text-sm border-b border-gray-700">
-                  <th className="py-4 px-6 font-semibold w-20 text-center">번호</th>
-                  <th className="py-4 px-6 font-semibold">제목</th>
-                  <th className="py-4 px-6 font-semibold w-32 text-center">작성자</th>
-                  <th className="py-4 px-6 font-semibold w-32 text-center">작성일</th>
-                  <th className="py-4 px-6 font-semibold w-24 text-center">조회수</th>
+                <tr className="bg-gray-900/80 text-gray-400 text-xs sm:text-sm border-b border-gray-700">
+                  <th className="py-3 px-2 sm:py-4 sm:px-6 font-semibold w-12 sm:w-20 text-center">번호</th>
+                  <th className="py-3 px-4 sm:py-4 sm:px-6 font-semibold">제목</th>
+                  {/* hidden md:table-cell을 사용하여 모바일에서는 숨김 처리 */}
+                  <th className="py-3 px-6 font-semibold w-24 text-center hidden md:table-cell">작성자</th>
+                  <th className="py-3 px-6 font-semibold w-28 text-center hidden sm:table-cell">작성일</th>
+                  <th className="py-3 px-6 font-semibold w-20 text-center hidden md:table-cell">조회수</th>
                 </tr>
               </thead>
               <tbody>
                 {notices.map((post) => (
                   <tr key={post.id} className="border-b border-gray-700/50 hover:bg-gray-700/80 transition-colors cursor-pointer group">
-                    <td className="py-4 px-6 text-center text-gray-500 font-medium">{post.id}</td>
-                    <td className="py-4 px-6 flex items-center">
-                      {/* 배지 디자인 (타입별로 색상 다름) */}
-                      <span className={`text-xs px-2 py-1 rounded mr-3 font-bold shadow-sm shrink-0
-                        ${post.type === '필독' ? 'bg-red-900/60 text-red-400 border border-red-700' : 
-                          post.type === '공지' ? 'bg-yellow-900/60 text-yellow-400 border border-yellow-700' : 
-                          post.type === '이벤트' ? 'bg-sky-900/60 text-sky-400 border border-sky-700' : 
-                          'bg-gray-700 text-gray-300 border border-gray-600'}`}>
-                        {post.type}
-                      </span>
-                      {/* 제목 (마우스 오버 시 금색으로 변경) */}
-                      <span className="text-gray-200 group-hover:text-yellow-400 transition-colors font-medium truncate">
-                        {post.title}
-                      </span>
+                    
+                    {/* 1. 번호 */}
+                    <td className="py-3 px-2 sm:py-4 sm:px-6 text-center text-gray-500 font-medium text-xs sm:text-base">
+                      {post.id}
                     </td>
-                    <td className="py-4 px-6 text-center text-sm text-gray-400">{post.author}</td>
-                    <td className="py-4 px-6 text-center text-sm text-gray-500">{post.date}</td>
-                    <td className="py-4 px-6 text-center text-sm text-gray-500">{post.views}</td>
+                    
+                    {/* 2. 제목 (모바일 화면 최적화) */}
+                    <td className="py-3 px-4 sm:py-4 sm:px-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        {/* 배지 */}
+                        <span className={`text-[10px] sm:text-xs px-2 py-0.5 sm:py-1 rounded font-bold shadow-sm w-max shrink-0
+                          ${post.type === '필독' ? 'bg-red-900/60 text-red-400 border border-red-700' : 
+                            post.type === '공지' ? 'bg-yellow-900/60 text-yellow-400 border border-yellow-700' : 
+                            post.type === '이벤트' ? 'bg-sky-900/60 text-sky-400 border border-sky-700' : 
+                            'bg-gray-700 text-gray-300 border border-gray-600'}`}>
+                          {post.type}
+                        </span>
+                        {/* 제목 텍스트 (줄바꿈 방지 완화) */}
+                        <span className="text-gray-200 group-hover:text-yellow-400 transition-colors font-medium text-sm sm:text-base break-keep leading-tight">
+                          {post.title}
+                        </span>
+                      </div>
+                      
+                      {/* ★ 모바일용 추가 정보: 화면이 좁을 때만 제목 아래에 작성자/날짜가 나타납니다 (sm:hidden) */}
+                      <div className="mt-2 text-[11px] text-gray-500 flex gap-2 sm:hidden items-center">
+                        <span>{post.author}</span>
+                        <span>|</span>
+                        <span>{post.date}</span>
+                        <span>|</span>
+                        <span>조회 {post.views}</span>
+                      </div>
+                    </td>
+                    
+                    {/* 3. 데스크탑/태블릿용 컬럼 (모바일에서는 숨겨짐) */}
+                    <td className="py-4 px-6 text-center text-sm text-gray-400 hidden md:table-cell">{post.author}</td>
+                    <td className="py-4 px-6 text-center text-sm text-gray-500 hidden sm:table-cell">{post.date}</td>
+                    <td className="py-4 px-6 text-center text-sm text-gray-500 hidden md:table-cell">{post.views}</td>
+                    
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           
+        </div>
+      );
+    }
+
+    // === 6. 랭킹 보드 컴포넌트 (Ranking Board Component) ===
+    function RankingBoard() {
+      // 랭킹 임시 데이터 (종족, 포인트, 승률 포함)
+      const rankings = [
+        { rank: 1, name: 'By_Slayer', points: 2150, race: 'Terran', winRate: '72%' },
+        { rank: 2, name: 'By_Flash', points: 2080, race: 'Protoss', winRate: '68%' },
+        { rank: 3, name: 'By_Zergling', points: 1950, race: 'Zerg', winRate: '65%' },
+        { rank: 4, name: 'By_Marine', points: 1820, race: 'Terran', winRate: '61%' },
+        { rank: 5, name: 'By_Zealot', points: 1790, race: 'Protoss', winRate: '59%' },
+        { rank: 6, name: 'By_Hydra', points: 1750, race: 'Zerg', winRate: '58%' },
+        { rank: 7, name: 'By_Ghost', points: 1680, race: 'Terran', winRate: '55%' },
+        { rank: 8, name: 'By_Dragoon', points: 1620, race: 'Protoss', winRate: '54%' },
+        { rank: 9, name: 'By_Mutal', points: 1590, race: 'Zerg', winRate: '52%' },
+        { rank: 10, name: 'By_Goliath', points: 1550, race: 'Terran', winRate: '51%' },
+      ];
+
+      return (
+        <div className="w-full max-w-5xl mx-auto animate-fade-in-down mt-4 sm:mt-8">
+          
+          <div className="flex justify-between items-end mb-6 px-2 sm:px-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500 drop-shadow-md">
+              🏆 시즌 통합 랭킹 (Top 10)
+            </h2>
+            <span className="text-gray-400 text-xs sm:text-sm font-medium">2026년 상반기 기준</span>
+          </div>
+
+          {/* === Top 3 포디움 (카드 형식) === */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 mb-8 pt-4">
+            {rankings.slice(0, 3).map((player) => (
+              <div key={player.rank} className={`relative bg-gray-800 rounded-xl border p-6 flex flex-col items-center shadow-xl transition-transform hover:-translate-y-2 cursor-pointer
+                ${player.rank === 1 ? 'border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.2)] md:-translate-y-4' : 
+                  player.rank === 2 ? 'border-gray-400 shadow-[0_0_15px_rgba(156,163,175,0.2)]' : 
+                  'border-amber-700 shadow-[0_0_15px_rgba(180,83,9,0.2)]'}`}>
+                
+                {/* 등수 뱃지 (왕관 느낌) */}
+                <div className={`absolute -top-5 w-12 h-12 rounded-full flex items-center justify-center font-black text-2xl shadow-lg border-2 border-gray-900
+                  ${player.rank === 1 ? 'bg-gradient-to-br from-yellow-300 to-yellow-600 text-white' : 
+                    player.rank === 2 ? 'bg-gradient-to-br from-gray-300 to-gray-500 text-white' : 
+                    'bg-gradient-to-br from-amber-500 to-amber-700 text-white'}`}>
+                  {player.rank}
+                </div>
+                
+                <h3 className="text-2xl font-bold text-white mt-4">{player.name}</h3>
+                <span className="text-sm text-gray-400 mt-1">{player.race}</span>
+                
+                <div className="w-full h-px bg-gray-700 my-4"></div>
+                
+                <div className="flex justify-between w-full text-sm">
+                  <span className="text-gray-400">래더 포인트</span>
+                  <span className="font-bold text-sky-400 text-base">{player.points} P</span>
+                </div>
+                <div className="flex justify-between w-full text-sm mt-2">
+                  <span className="text-gray-400">승률</span>
+                  <span className="font-bold text-emerald-400">{player.winRate}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* === 4~10위 리스트 (모바일 반응형 테이블) === */}
+          <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-2xl">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-900/80 text-gray-400 text-sm border-b border-gray-700">
+                  <th className="py-3 px-4 sm:py-4 sm:px-6 font-semibold w-16 text-center">순위</th>
+                  <th className="py-3 px-4 sm:py-4 sm:px-6 font-semibold">닉네임</th>
+                  <th className="py-3 px-4 sm:py-4 sm:px-6 font-semibold text-center hidden sm:table-cell">종족</th>
+                  <th className="py-3 px-4 sm:py-4 sm:px-6 font-semibold text-center w-24 sm:w-32">포인트</th>
+                  <th className="py-3 px-4 sm:py-4 sm:px-6 font-semibold text-center hidden sm:table-cell w-24">승률</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rankings.slice(3).map((player) => (
+                  <tr key={player.rank} className="border-b border-gray-700/50 hover:bg-gray-700/80 transition-colors">
+                    <td className="py-3 px-4 sm:py-4 sm:px-6 text-center text-gray-400 font-bold">{player.rank}</td>
+                    <td className="py-3 px-4 sm:py-4 sm:px-6 font-medium text-gray-200">
+                      <div className="flex flex-col sm:flex-row gap-1 sm:items-center">
+                        <span className="text-sm sm:text-base">{player.name}</span>
+                        {/* 모바일 전용 부가 정보 */}
+                        <span className="text-[11px] text-gray-500 sm:hidden">{player.race} | 승률 {player.winRate}</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 sm:py-4 sm:px-6 text-center text-sm text-gray-400 hidden sm:table-cell">{player.race}</td>
+                    <td className="py-3 px-4 sm:py-4 sm:px-6 text-center font-bold text-sky-400 text-sm sm:text-base">{player.points}</td>
+                    <td className="py-3 px-4 sm:py-4 sm:px-6 text-center text-sm text-emerald-400 hidden sm:table-cell">{player.winRate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+        </div>
+      );
+    }
+
+    // === 7. 클랜 소개 (개요) 컴포넌트 ===
+    function ClanOverview() {
+      return (
+        <div className="w-full max-w-5xl mx-auto animate-fade-in-down mt-4 sm:mt-8 space-y-6 sm:space-y-8">
+          
+          {/* 타이틀 및 메인 배너 (Hero Section) */}
+          <div className="relative bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 shadow-2xl p-8 sm:p-12 text-center group">
+             <div className="absolute inset-0 bg-gradient-to-b from-gray-700/40 to-transparent pointer-events-none"></div>
+             <h2 className="relative text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 mb-4 drop-shadow-lg transition-transform duration-500 group-hover:scale-105">
+                최강의 스타크래프트 빠른무한 클랜, ByClan
+             </h2>
+             <p className="relative text-gray-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+                바이클랜은 스타크래프트 빠른무한(빨무)을 즐기는 유저들이 모인 명실상부 최고의 클랜입니다. 
+                체계적인 래더 시스템과 끈끈한 커뮤니티를 바탕으로 함께 성장하며 즐거운 게임 문화를 만들어갑니다.
+             </p>
+          </div>
+
+          {/* 핵심 정보 그리드 (Stats/Info Grid) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+             <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 flex flex-col items-center text-center shadow-lg hover:border-yellow-500/50 hover:bg-gray-700/50 transition-all cursor-default">
+                <span className="text-4xl mb-3 drop-shadow-md">🎮</span>
+                <h3 className="text-lg font-bold text-white mb-1">메인 게임</h3>
+                <p className="text-gray-400 text-sm">스타크래프트 리마스터<br/>빠른무한 (Fast Infinite)</p>
+             </div>
+             <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 flex flex-col items-center text-center shadow-lg hover:border-yellow-500/50 hover:bg-gray-700/50 transition-all cursor-default relative overflow-hidden">
+                <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-yellow-600"></div>
+                <span className="text-4xl mb-3 drop-shadow-md">👑</span>
+                <h3 className="text-lg font-bold text-white mb-1">리더십</h3>
+                <p className="text-gray-400 text-sm">길드마스터 및<br/>운영진 체제</p>
+             </div>
+             <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 flex flex-col items-center text-center shadow-lg hover:border-yellow-500/50 hover:bg-gray-700/50 transition-all cursor-default">
+                <span className="text-4xl mb-3 drop-shadow-md">⚔️</span>
+                <h3 className="text-lg font-bold text-white mb-1">주요 활동</h3>
+                <p className="text-gray-400 text-sm">자체 래더 시스템 운영,<br/>정기 클랜전 및 내전</p>
+             </div>
+          </div>
+
+          {/* 클랜 목표 (Detailed Info) */}
+          <div className="bg-gray-800 p-6 sm:p-8 rounded-xl border border-gray-700 shadow-xl">
+             <h3 className="text-xl font-bold text-yellow-400 mb-4 border-b border-gray-700 pb-2 flex items-center gap-2">
+               <span>🎯</span> 클랜 목표 및 비전
+             </h3>
+             <ul className="space-y-4 text-gray-300 text-sm sm:text-base">
+                <li className="flex items-start">
+                  <span className="text-sky-400 mr-3 text-lg leading-none">✔</span> 
+                  <span><strong>실력 향상과 즐거움:</strong> 초보부터 고수까지 모두가 즐길 수 있는 건전한 게임 환경을 조성합니다.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-sky-400 mr-3 text-lg leading-none">✔</span> 
+                  <span><strong>체계적인 래더 시스템:</strong> 공정한 경쟁을 통한 동기부여와 시즌별 확실한 보상을 제공합니다.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-sky-400 mr-3 text-lg leading-none">✔</span> 
+                  <span><strong>소통과 유대감:</strong> 디스코드 및 단톡방을 통한 활발한 소통으로 가족 같은 분위기를 지향합니다.</span>
+                </li>
+             </ul>
+          </div>
+          
+        </div>
+      );
+    }
+
+    // === 8. BY 래더 시스템 컴포넌트 ===
+    function LadderSystem() {
+      return (
+        <div className="w-full max-w-5xl mx-auto animate-fade-in-down mt-4 sm:mt-8 space-y-6 sm:space-y-8">
+          
+          {/* 타이틀 영역 */}
+          <div className="text-center sm:text-left border-b border-gray-700 pb-4 px-2 sm:px-0">
+            <h2 className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500 drop-shadow-md">
+              ⚔️ BY 래더 시스템
+            </h2>
+            <p className="text-gray-400 mt-2 text-sm sm:text-base break-keep">
+              공정한 경쟁과 확실한 보상! 바이클랜만의 고유한 래더 매치 규칙과 보상 체계를 안내합니다.
+            </p>
+          </div>
+
+          {/* 규칙 및 포인트 시스템 그리드 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            
+            {/* 1. 매치 규칙 */}
+            <div className="bg-gray-800 p-6 sm:p-8 rounded-xl border border-gray-700 shadow-xl hover:border-sky-500/30 transition-colors">
+              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <span className="text-sky-400">📜</span> 기본 매치 규칙
+              </h3>
+              <ul className="space-y-4 text-sm sm:text-base text-gray-300">
+                <li className="flex gap-2 items-start">
+                  <span className="text-yellow-500 mt-0.5">✔</span> 
+                  <span><strong>경기 방식:</strong> 1:1 또는 2:2 빠른무한 단판승<br/><span className="text-xs text-gray-500">(결승 및 준결승은 3판 2선승제로 진행)</span></span>
+                </li>
+                <li className="flex gap-2 items-start">
+                  <span className="text-yellow-500 mt-0.5">✔</span> 
+                  <span><strong>사용 맵:</strong> 공식 스폰빵 맵 (버전은 공지사항 참조)</span>
+                </li>
+                <li className="flex gap-2 items-start">
+                  <span className="text-yellow-500 mt-0.5">✔</span> 
+                  <span><strong>결과 보고:</strong> 승자가 디스코드 [래더-결과-보고] 채널에 리플레이 첨부 및 점수 기록</span>
+                </li>
+                <li className="flex gap-2 items-start">
+                  <span className="text-red-400 mt-0.5">✖</span> 
+                  <span><strong>주의사항:</strong> 디스커넥트 발생 시 운영진 판독, 욕설 및 비매너 행위 적발 시 래더 포인트 몰수</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* 2. 포인트(MMR) 시스템 */}
+            <div className="bg-gray-800 p-6 sm:p-8 rounded-xl border border-gray-700 shadow-xl hover:border-emerald-500/30 transition-colors">
+              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <span className="text-emerald-400">📈</span> 포인트(MMR) 산정 방식
+              </h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center bg-gray-900 p-4 rounded-lg border border-gray-700">
+                  <span className="text-gray-300 font-semibold">기본 승리 시</span>
+                  <span className="text-sky-400 font-bold sm:text-lg">+15 P ~ +25 P</span>
+                </div>
+                <div className="flex justify-between items-center bg-gray-900 p-4 rounded-lg border border-gray-700">
+                  <span className="text-gray-300 font-semibold">기본 패배 시</span>
+                  <span className="text-red-400 font-bold sm:text-lg">-10 P ~ -15 P</span>
+                </div>
+                <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700/50 mt-4">
+                  <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                    💡 <strong className="text-gray-300">알림:</strong> 상대방과 자신의 현재 포인트(MMR) 차이에 따라 획득 및 상실 점수가 차등 적용됩니다. (자신보다 높은 점수의 유저를 이길 경우 더 많은 점수 획득)
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. 시즌 보상 섹션 */}
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 sm:p-8 rounded-xl border border-yellow-700/40 shadow-2xl relative overflow-hidden group">
+            {/* 배경 장식용 아이콘 */}
+            <div className="absolute -right-6 -top-6 text-9xl opacity-5 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none">🎁</div>
+            
+            <h3 className="text-xl font-bold text-yellow-400 mb-6 flex items-center gap-2 border-b border-gray-700/50 pb-3">
+              <span>👑</span> 시즌 종료 보상 안내
+            </h3>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* 1위 */}
+              <div className="bg-gray-800/80 p-5 rounded-lg border border-yellow-500/30 text-center flex flex-col items-center hover:bg-gray-700 transition-colors">
+                <span className="text-4xl mb-3 drop-shadow-[0_0_15px_rgba(234,179,8,0.8)]">🥇</span>
+                <span className="font-bold text-gray-100 text-lg">1위 (시즌 우승)</span>
+                <span className="text-yellow-500 text-sm mt-2 font-medium">상금 + 디스코드 '챔피언' 전용 역할 부여</span>
+              </div>
+              {/* 2~3위 */}
+              <div className="bg-gray-800/80 p-5 rounded-lg border border-gray-600/50 text-center flex flex-col items-center hover:bg-gray-700 transition-colors">
+                <span className="text-4xl mb-3 drop-shadow-[0_0_15px_rgba(156,163,175,0.6)]">🥈</span>
+                <span className="font-bold text-gray-100 text-lg">2위 ~ 3위</span>
+                <span className="text-gray-400 text-sm mt-2 font-medium">소정의 상품 + 우수 클랜원 역할 부여</span>
+              </div>
+              {/* Top 10 */}
+              <div className="bg-gray-800/80 p-5 rounded-lg border border-amber-700/30 text-center flex flex-col items-center hover:bg-gray-700 transition-colors">
+                <span className="text-4xl mb-3 drop-shadow-[0_0_15px_rgba(180,83,9,0.8)]">🏅</span>
+                <span className="font-bold text-gray-100 text-lg">Top 10 유지</span>
+                <span className="text-amber-500 text-sm mt-2 font-medium">명예의 전당 영구 등재 기록</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       );
     }
@@ -282,19 +620,23 @@
             </header>
           )}
 
-                   {/* 동적으로 변하는 콘텐츠 영역 */}
+                              {/* 동적으로 변하는 콘텐츠 영역 */}
           <main className="flex-grow w-full relative z-10 flex flex-col items-center justify-start p-4 md:p-8">
             {activeView === 'Home' ? (
               <HomeContent />
+            ) : activeView === '개요' ? (
+              <ClanOverview />
             ) : activeView === '공지사항' ? (
-              // '공지사항' 메뉴를 클릭하면 NoticeBoard 컴포넌트 출력
               <NoticeBoard /> 
+            ) : activeView === '클랜원별 랭킹' || activeView === '시즌별 랭킹' ? (
+              <RankingBoard />
+            ) : activeView === '레더 매치' || activeView === '레더 포인트' || activeView === '레더 보상 안내' ? (
+              // BY레더시스템의 하위 메뉴들을 누르면 LadderSystem 컴포넌트 출력
+              <LadderSystem />
             ) : (
-              // 그 외 아직 안 만든 메뉴들은 Placeholder 출력
               <PagePlaceholder title={activeView} />
             )}
           </main>
-
           
         </div>
       );
