@@ -557,6 +557,141 @@
       );
     }
 
+// === 10. 가입 및 신청 프로세스 (Join & Application) ===
+    function JoinProcess({ view }) {
+      return (
+        <div className="w-full max-w-3xl mx-auto animate-fade-in-down mt-4 sm:mt-8 space-y-6">
+          <div className="border-b border-gray-700 pb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500 drop-shadow-md">
+              📝 {view}
+            </h2>
+          </div>
+
+          {view === '가입안내' ? (
+            <div className="bg-gray-800 p-6 sm:p-8 rounded-xl border border-gray-700 shadow-xl space-y-4">
+              <h3 className="text-lg font-bold text-white mb-2">🔰 신규 클랜원 가입 조건</h3>
+              <ul className="space-y-2 text-gray-300 text-sm sm:text-base">
+                <li>✔️ <strong>나이:</strong> 20세 이상 성인 남녀</li>
+                <li>✔️ <strong>실력:</strong> 초보자부터 고수까지 열정만 있다면 누구나 환영! (단, 기본 매너 필수)</li>
+                <li>✔️ <strong>활동:</strong> 주 2회 이상 디스코드 접속 및 게임 참여 권장</li>
+              </ul>
+              <div className="mt-6 p-4 bg-gray-900/50 rounded-lg border border-gray-600">
+                <p className="text-sky-400 font-bold mb-1">진행 절차</p>
+                <p className="text-sm text-gray-400">가입신청서 작성 ➔ 운영진 확인 ➔ 디스코드 초대 ➔ 간단한 테스트 게임 ➔ 가입 승인</p>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-gray-800 p-6 sm:p-8 rounded-xl border border-gray-700 shadow-xl">
+              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                <div>
+                  <label className="block text-sm font-bold text-gray-300 mb-1">스타크래프트 닉네임</label>
+                  <input type="text" className="w-full bg-gray-900 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-yellow-500" placeholder="예: By_Newbie" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-300 mb-1">주종족</label>
+                    <select className="w-full bg-gray-900 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-yellow-500">
+                      <option>테란 (Terran)</option>
+                      <option>저그 (Zerg)</option>
+                      <option>프로토스 (Protoss)</option>
+                      <option>랜덤 (Random)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-300 mb-1">출생년도 (나이 확인용)</label>
+                    <input type="number" className="w-full bg-gray-900 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-yellow-500" placeholder="예: 1995" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-300 mb-1">가입 동기 또는 하고 싶은 말</label>
+                  <textarea rows="4" className="w-full bg-gray-900 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-yellow-500" placeholder="열심히 하겠습니다!"></textarea>
+                </div>
+                <button className="w-full mt-4 py-3 bg-gradient-to-r from-yellow-600 to-yellow-500 text-gray-900 font-bold rounded shadow-lg hover:scale-[1.02] transition-transform">
+                  {view} 제출하기
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // === 11. 포인트 상점 및 내역 (Point Dashboard - Sci-Fi 테마) ===
+    function PointDashboard({ view }) {
+      const shopItems = [
+        { id: 1, name: '디스코드 VVIP 역할 (30일)', price: 1000, icon: '👑' },
+        { id: 2, name: '닉네임 색상 변경권', price: 500, icon: '🎨' },
+        { id: 3, name: '치킨 세트 기프티콘', price: 5000, icon: '🍗' },
+        { id: 4, name: '스타벅스 아메리카노', price: 1500, icon: '☕' }
+      ];
+
+      return (
+        <div className="w-full max-w-5xl mx-auto animate-fade-in-down mt-4 sm:mt-8 font-mono">
+          <div className="flex justify-between items-end mb-6 px-2 sm:px-0 border-b border-cyan-500/50 pb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] tracking-widest uppercase">
+              [ SYSTEM: {view === '포인트 상점' ? 'POINT SHOP' : 'POINT HISTORY'} ]
+            </h2>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-400 text-xs sm:text-sm">MY POINTS:</span>
+              <span className="text-yellow-400 font-bold sm:text-lg">2,450 P</span>
+            </div>
+          </div>
+
+          {view === '포인트 상점' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {shopItems.map(item => (
+                <div key={item.id} className="bg-[#0A1128] border border-cyan-500/30 p-4 rounded-sm flex items-center justify-between hover:border-cyan-400 transition-colors group">
+                  <div className="flex items-center gap-4">
+                    <span className="text-3xl bg-cyan-900/30 p-2 rounded">{item.icon}</span>
+                    <div>
+                      <h4 className="text-cyan-100 font-bold group-hover:text-cyan-400 transition-colors">{item.name}</h4>
+                      <span className="text-emerald-400 text-sm">{item.price} P</span>
+                    </div>
+                  </div>
+                  <button className="px-4 py-1.5 border border-emerald-500 text-emerald-400 text-sm hover:bg-emerald-500 hover:text-[#0A1128] font-bold transition-colors">
+                    구매
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-[#0A1128] border border-cyan-500/40 rounded-sm overflow-hidden">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-cyan-900/40 text-cyan-300 text-sm border-b border-cyan-500/50">
+                  <tr>
+                    <th className="py-3 px-4">일시</th>
+                    <th className="py-3 px-4">내용</th>
+                    <th className="py-3 px-4 text-center">증감</th>
+                    <th className="py-3 px-4 text-center hidden sm:table-cell">잔액</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-300 text-sm">
+                  <tr className="border-b border-cyan-800/30">
+                    <td className="py-3 px-4">2026.03.29</td>
+                    <td className="py-3 px-4">래더 매치 승리 (vs By_Flash)</td>
+                    <td className="py-3 px-4 text-center text-emerald-400 font-bold">+25</td>
+                    <td className="py-3 px-4 text-center hidden sm:table-cell">2,450</td>
+                  </tr>
+                  <tr className="border-b border-cyan-800/30">
+                    <td className="py-3 px-4">2026.03.25</td>
+                    <td className="py-3 px-4">포인트 상점 - 닉네임 색상 변경권 구매</td>
+                    <td className="py-3 px-4 text-center text-red-400 font-bold">-500</td>
+                    <td className="py-3 px-4 text-center hidden sm:table-cell">2,425</td>
+                  </tr>
+                  <tr className="border-b border-cyan-800/30">
+                    <td className="py-3 px-4">2026.03.21</td>
+                    <td className="py-3 px-4">주말 내전 이벤트 참가 보상</td>
+                    <td className="py-3 px-4 text-center text-emerald-400 font-bold">+100</td>
+                    <td className="py-3 px-4 text-center hidden sm:table-cell">2,925</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     // === 12. 전체 앱 컴포넌트 (반응형 햄버거 메뉴 적용) ===
     function ByClanHome() {
       const [openMenuIndex, setOpenMenuIndex] = React.useState(null);
@@ -706,17 +841,33 @@
             )}
           </nav>
 
-          {/* 메인 라우팅 영역 */}
-          <main className="flex-grow w-full relative z-10 flex flex-col items-center justify-start px-2 sm:px-8">
+          {/* 메인 라우팅 영역 (모든 메뉴 연결 완료) */}
+          <main className="flex-grow w-full relative z-10 flex flex-col items-center justify-start px-2 sm:px-8 mb-10">
             {activeView === 'Home' ? <HomeContent /> : 
+             
+             /* 클랜 소개 파트 */
              activeView === '개요' ? <ClanOverview /> : 
-             activeView === '공지사항' ? <NoticeBoard /> : 
+             activeView === '가입안내' || activeView === '가입신청' || activeView === '정회원 전환신청' ? <JoinProcess view={activeView} /> :
+             
+             /* 커뮤니티 & 공지 파트 (공통 게시판 레이아웃 재사용) */
+             activeView === '공지사항' || activeView === 'BSL 공지사항' || activeView === '토너먼트 공지' ? <NoticeBoard /> : 
+             activeView === '자유게시판' || activeView === '클랜원 소식' ? <CommunityBoard /> : 
+             
+             /* 래더 시스템 파트 (Sci-Fi 테마) */
+             activeView === '대시보드' ? <LadderSystem /> : 
              activeView === '랭킹' || activeView === '시즌별 랭킹' ? <RankingBoard /> : 
-             activeView === '경기기록' ? <MatchRecord /> : // ★ 새로 추가된 경기 기록 메뉴
-             activeView === '대시보드' || activeView === '레더 포인트' || activeView === '레더 보상 안내' ? <LadderSystem /> : 
-             activeView === 'BSL 일정' || activeView === '토너먼트 일정' ? <ClanTournament /> : 
-             activeView === '자유게시판' ? <CommunityBoard /> : 
+             activeView === '경기기록' ? <MatchRecord /> : 
+             
+             /* 대회 일정 파트 */
+             activeView === 'BSL 경기일정 및 결과' || activeView === '진행중인 토너먼트' ? <ClanTournament /> : 
+             
+             /* 포인트 파트 (Sci-Fi 테마) */
+             activeView === '포인트 상점' || activeView === '포인트 내역' ? <PointDashboard view={activeView} /> :
+             
+             /* 미디어 파트 */
              activeView === '경기 영상' || activeView === '사진 갤러리' ? <MediaGallery /> : 
+             
+             /* 만약 매핑되지 않은 예외 메뉴가 발생할 경우를 위한 안전망 */
              <PagePlaceholder title={activeView} />}
           </main>
           
